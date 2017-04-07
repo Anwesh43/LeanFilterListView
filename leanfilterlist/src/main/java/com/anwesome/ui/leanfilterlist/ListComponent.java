@@ -42,7 +42,7 @@ public class ListComponent extends View {
         paint.setTextSize(h/5);
         canvas.drawText(getMeasuredText(w,title),w/3,h/3-paint.getTextSize()/2,paint);
         paint.setTextSize(h/8);
-        canvas.drawText(getMeasuredText(w,title),w/3,2*h/3-paint.getTextSize()/2,paint);
+        canvas.drawText(getMeasuredText(w,subTitle),w/3,2*h/3-paint.getTextSize()/2,paint);
         time++;
     }
     private String getMeasuredText(int w,String text) {
@@ -59,7 +59,7 @@ public class ListComponent extends View {
         }
         return measuredText;
     }
-    public void matchCategory(String newCategory) {
+    public boolean matchCategory(String newCategory) {
         boolean matched = false;
         for(String category:categories) {
             if(category.equals(newCategory)) {
@@ -67,11 +67,6 @@ public class ListComponent extends View {
                 break;
             }
         }
-        if(matched) {
-            setVisibility(VISIBLE);
-        }
-        else {
-            setVisibility(INVISIBLE);
-        }
+        return matched;
     }
 }

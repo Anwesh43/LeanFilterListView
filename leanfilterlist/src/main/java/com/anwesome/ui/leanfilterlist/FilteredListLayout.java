@@ -23,9 +23,10 @@ public class FilteredListLayout extends ViewGroup{
     private HorizontalScrollView horizontalScrollView;
     private HorizontalButtonLayout filterButtonLayout;
     private VerticalListView listComponentLayout;
-    private List<String> categories = new ArrayList<>();
+    private List<String> categories = new ArrayList<>(),selectedCategories = new ArrayList<>();
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private ScrollView scrollView;
+    private List<ListComponent> listComponents = new ArrayList<>();
     private int w,h;
     public void onMeasure(int wspec,int hspec) {
         for(int i=0;i<getChildCount();i++) {
@@ -35,25 +36,55 @@ public class FilteredListLayout extends ViewGroup{
         setMeasuredDimension(w,h);
     }
     public void addFilterButton(final String category) {
-        int viewW = (int)(paint.measureText(category)*2);
-        final FilterButton filterButton = new FilterButton(getContext(),category);
-        filterButton.setPaint(paint);
-        filterButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                categories.add(category);
-                filterButton.start();
+        if(!categories.contains(category)) {
+            categories.add(category);
+            int viewW = (int) (paint.measureText(category) * 2);
+            final FilterButton filterButton = new FilterButton(getContext(), category);
+            filterButton.setPaint(paint);
+            filterButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(!selectedCategories.contains(category)) {
+                        selectedCategories.add(category);
+                    }
+                    else {
+                        selectedCategories.remove(category);
+                    }
+                    filterButton.start();
+                    filterListComponents();
+                }
+            });
+            filterButtonLayout.addView(filterButton, new LayoutParams(viewW, h / 20));
+            filterButtonLayout.requestLayout();
+            horizontalScrollView.requestLayout();
+        }
+    }
+    private void filterListComponents() {
+            listComponentLayout.removeAllViews();
+            for(ListComponent component:listComponents) {
+                boolean match = false;
+                for(String category:selectedCategories) {
+                    match = component.matchCategory(category);
+                    if(match) {
+                        break;
+                    }
+                }
+                if(match) {
+                    listComponentLayout.addView(component,new LayoutParams(9*w/10,h/10));
+                }
             }
-        });
-        filterButtonLayout.addView(filterButton,new LayoutParams(viewW,h/20));
-        filterButtonLayout.requestLayout();
-        horizontalScrollView.requestLayout();
+            if(selectedCategories.size() == 0) {
+                for(ListComponent component:listComponents) {
+                    listComponentLayout.addView(component,new LayoutParams(9*w/10,h/10));
+                }
+            }
     }
     public void addListComponent(Bitmap bitmap,String title,String subtTitle,List<String> categories) {
         ListComponent listComponent = new ListComponent(getContext(),bitmap,title,subtTitle);
         listComponent.setCategories(categories);
         listComponentLayout.addView(listComponent,new LayoutParams(9*w/10,h/8));
         listComponentLayout.requestLayout();
+        listComponents.add(listComponent);
         scrollView.requestLayout();
     }
     public void onLayout(boolean reloaded,int a,int b,int w,int h) {
