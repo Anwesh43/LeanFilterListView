@@ -1,5 +1,7 @@
 package com.anwesome.ui.leanfilterlist;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,8 +14,9 @@ import android.view.View;
  */
 public class FilterButton extends View{
     private String category;
-    private float colorScale = 0f;
+    private float colorScale = 0f,dir = 1;
     private int color = Color.parseColor("#00BCD4");
+    private ColorFillListener colorFillListener = new ColorFillListener();
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     public FilterButton(Context context,String category) {
         super(context);
@@ -42,5 +45,35 @@ public class FilterButton extends View{
     public void setColorScale(float colorScale) {
         this.colorScale = colorScale;
         postInvalidate();
+    }
+    public void start() {
+        colorFillListener.start();
+    }
+    private class ColorFillListener implements ValueAnimator.AnimatorUpdateListener,Animator.AnimatorListener {
+        public void start() {
+            ValueAnimator valueAnimator = ValueAnimator.ofFloat(0,1);
+            if(dir == -1) {
+                valueAnimator = ValueAnimator.ofFloat(1,0);
+            }
+            valueAnimator.setDuration(750);
+            valueAnimator.addUpdateListener(this);
+            valueAnimator.addListener(this);
+            valueAnimator.start();
+        }
+        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+            setColorScale((float)valueAnimator.getAnimatedValue());
+        }
+        public void onAnimationEnd(Animator animator) {
+            dir*=-1;
+        }
+        public void onAnimationRepeat(Animator animator) {
+
+        }
+        public void onAnimationCancel(Animator animator) {
+
+        }public void onAnimationStart(Animator animator) {
+
+        }
+
     }
 }
