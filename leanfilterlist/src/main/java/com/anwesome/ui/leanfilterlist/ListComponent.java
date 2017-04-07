@@ -40,9 +40,9 @@ public class ListComponent extends View {
         canvas.drawBitmap(bitmap,w/5-w/20,h/2-w/20,paint);
         canvas.restore();
         paint.setTextSize(h/5);
-        canvas.drawText(getMeasuredText(w,title),w/3,h/3-paint.getTextSize()/2,paint);
+        canvas.drawText(getMeasuredText(w,title),w/3,h/3+paint.getTextSize()/2,paint);
         paint.setTextSize(h/8);
-        canvas.drawText(getMeasuredText(w,subTitle),w/3,2*h/3-paint.getTextSize()/2,paint);
+        canvas.drawText(getMeasuredText(w,subTitle),w/3,h/2+h/15+paint.getTextSize()/2,paint);
         time++;
     }
     private String getMeasuredText(int w,String text) {

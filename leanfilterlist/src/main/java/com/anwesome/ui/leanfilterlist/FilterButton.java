@@ -26,13 +26,15 @@ public class FilterButton extends View{
         this.paint = paint;
     }
     public void onDraw(Canvas canvas) {
+
         int w = canvas.getWidth(),h = canvas.getHeight();
+        paint.setTextSize(h/2);
         float r = Math.max(w,h)/10;
         canvas.save();
         canvas.translate(w/2,h/2);
         paint.setColor(color);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(w/30);
+        paint.setStrokeWidth(h/20);
         canvas.drawRoundRect(new RectF(-w*0.4f,-h*0.4f,w*0.4f,h*0.4f),r,r,paint);
         paint.setStyle(Paint.Style.FILL);
         canvas.save();
@@ -56,7 +58,7 @@ public class FilterButton extends View{
             if(dir == -1) {
                 valueAnimator = ValueAnimator.ofFloat(1,0);
             }
-            valueAnimator.setDuration(750);
+            valueAnimator.setDuration(500);
             valueAnimator.addUpdateListener(this);
             valueAnimator.addListener(this);
             valueAnimator.start();

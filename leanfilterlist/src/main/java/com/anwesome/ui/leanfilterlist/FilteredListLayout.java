@@ -70,12 +70,12 @@ public class FilteredListLayout extends ViewGroup{
                     }
                 }
                 if(match) {
-                    listComponentLayout.addView(component,new LayoutParams(9*w/10,h/10));
+                    listComponentLayout.addView(component,new LayoutParams(9*w/10,h/8));
                 }
             }
             if(selectedCategories.size() == 0) {
                 for(ListComponent component:listComponents) {
-                    listComponentLayout.addView(component,new LayoutParams(9*w/10,h/10));
+                    listComponentLayout.addView(component,new LayoutParams(9*w/10,h/8));
                 }
             }
     }
@@ -86,6 +86,7 @@ public class FilteredListLayout extends ViewGroup{
         listComponentLayout.requestLayout();
         listComponents.add(listComponent);
         scrollView.requestLayout();
+        requestLayout();
     }
     public void onLayout(boolean reloaded,int a,int b,int w,int h) {
 
@@ -131,7 +132,9 @@ public class FilteredListLayout extends ViewGroup{
         horizontalScrollView.addView(filterButtonLayout,new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
         scrollView.addView(listComponentLayout,new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
         requestLayout();
+        horizontalScrollView.setHorizontalScrollBarEnabled(false);
         horizontalScrollView.requestLayout();
+        scrollView.setVerticalScrollBarEnabled(false);
         scrollView.requestLayout();
     }
     private class HorizontalButtonLayout extends ViewGroup {
@@ -151,7 +154,7 @@ public class FilteredListLayout extends ViewGroup{
             int x = 0;
             for(int i=0;i<getChildCount();i++) {
                 View child = getChildAt(i);
-                child.layout(x,h/25,x+child.getMeasuredWidth(),h/25+child.getMeasuredHeight());
+                child.layout(x,h/30,x+child.getMeasuredWidth(),h/30+child.getMeasuredHeight());
                 x+=(child.getMeasuredWidth()*6)/5;
             }
         }
@@ -168,7 +171,7 @@ public class FilteredListLayout extends ViewGroup{
                 measureChild(child, wspec, hspec);
                 h += (child.getMeasuredHeight() * 6) / 5;
             }
-            setMeasuredDimension(w, h);
+            setMeasuredDimension(w, h+2*h/5);
         }
 
         public void onLayout(boolean reloaded, int a, int b, int w, int h) {
