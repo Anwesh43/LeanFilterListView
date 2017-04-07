@@ -20,7 +20,8 @@ import java.util.List;
  */
 public class FilteredListLayout extends ViewGroup{
     private HorizontalScrollView horizontalScrollView;
-    private RelativeLayout filterButtonLayout,listComponentLayout;
+    private HorizontalButtonLayout filterButtonLayout;
+    private RelativeLayout listComponentLayout;
     private float fbX = 0,lcY = 0;
     private List<String> categories = new ArrayList<>();
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -34,10 +35,9 @@ public class FilteredListLayout extends ViewGroup{
         setMeasuredDimension(w,h);
     }
     public void addFilterButton(final String category) {
-        int viewW = (int)(paint.measureText(category)*3)/2;
+        int viewW = (int)(paint.measureText(category)*2);
         final FilterButton filterButton = new FilterButton(getContext(),category);
         filterButton.setPaint(paint);
-        filterButton.setX(viewW);
         filterButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,8 +45,9 @@ public class FilteredListLayout extends ViewGroup{
                 filterButton.start();
             }
         });
-        filterButtonLayout.addView(filterButton,new LayoutParams(viewW,h/10));
+        filterButtonLayout.addView(filterButton,new LayoutParams(viewW,h/20));
         filterButtonLayout.requestLayout();
+        horizontalScrollView.requestLayout();
         fbX+=(viewW*5)/4;
     }
     public void onLayout(boolean reloaded,int a,int b,int w,int h) {
@@ -71,9 +72,9 @@ public class FilteredListLayout extends ViewGroup{
         initViews();
     }
     public void initViews() {
-        filterButtonLayout = new RelativeLayout(getContext());
+        filterButtonLayout = new HorizontalButtonLayout(getContext());
         listComponentLayout = new RelativeLayout(getContext());
-        paint.setTextSize(h/15);
+
         horizontalScrollView = new HorizontalScrollView(getContext());
         scrollView = new ScrollView(getContext());
         addView(horizontalScrollView,new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
@@ -86,7 +87,33 @@ public class FilteredListLayout extends ViewGroup{
             w = size.x;
             h = size.y;
         }
-        horizontalScrollView.addView(filterButtonLayout,new LayoutParams(LayoutParams.WRAP_CONTENT,h/10));
+        paint.setTextSize(h/30);
+        horizontalScrollView.addView(filterButtonLayout,new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
         scrollView.addView(listComponentLayout,new LayoutParams(w,LayoutParams.WRAP_CONTENT));
+        requestLayout();
+        horizontalScrollView.requestLayout();
+        scrollView.requestLayout();
+    }
+    private class HorizontalButtonLayout extends ViewGroup {
+        public HorizontalButtonLayout(Context context) {
+            super(context);
+        }
+        public void onMeasure(int wspec,int hspec) {
+            int w = 0;
+            for(int i=0;i<getChildCount();i++) {
+                View child = getChildAt(i);
+                measureChild(child,wspec,hspec);
+                w+=(child.getMeasuredWidth()*6)/5;
+            }
+            setMeasuredDimension(w,h/20);
+        }
+        public void onLayout(boolean reloaded,int a,int b,int w,int h) {
+            int x = 0;
+            for(int i=0;i<getChildCount();i++) {
+                View child = getChildAt(i);
+                child.layout(x,0,x+child.getMeasuredWidth(),child.getMeasuredHeight());
+                x+=(child.getMeasuredWidth()*6)/5;
+            }
+        }
     }
 }

@@ -15,7 +15,7 @@ import android.view.View;
 public class FilterButton extends View{
     private String category;
     private float colorScale = 0f,dir = 1;
-    private int color = Color.parseColor("#00BCD4");
+    private int color = Color.parseColor("#AA00BCD4");
     private ColorFillListener colorFillListener = new ColorFillListener();
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     public FilterButton(Context context,String category) {
@@ -26,20 +26,21 @@ public class FilterButton extends View{
         this.paint = paint;
     }
     public void onDraw(Canvas canvas) {
-        int w = canvas.getWidth(),h = canvas.getHeight()/2;
+        int w = canvas.getWidth(),h = canvas.getHeight();
+        float r = Math.max(w,h)/10;
         canvas.save();
         canvas.translate(w/2,h/2);
         paint.setColor(color);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(w/30);
-        canvas.drawRoundRect(new RectF(-w*0.4f,-h*0.4f,w*0.4f,h*0.4f),0.2f*w,0.2f*h,paint);
+        canvas.drawRoundRect(new RectF(-w*0.4f,-h*0.4f,w*0.4f,h*0.4f),r,r,paint);
         paint.setStyle(Paint.Style.FILL);
         canvas.save();
         canvas.scale(colorScale,colorScale);
-        canvas.drawRoundRect(new RectF(-w*0.4f,-h*0.4f,w*0.4f,h*0.4f),0.2f*w,0.2f*h,paint);
+        canvas.drawRoundRect(new RectF(-w*0.4f,-h*0.4f,w*0.4f,h*0.4f),r,r,paint);
         canvas.restore();
         paint.setColor(Color.BLACK);
-        canvas.drawText(category,-paint.measureText(category)/2,-paint.getTextSize()/2,paint);
+        canvas.drawText(category,-paint.measureText(category)/2,+paint.getTextSize()/4,paint);
         canvas.restore();
     }
     public void setColorScale(float colorScale) {
