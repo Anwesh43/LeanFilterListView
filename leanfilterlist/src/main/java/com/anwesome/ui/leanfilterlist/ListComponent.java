@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.view.View;
 import java.util.List;
 import java.util.ArrayList;
@@ -30,7 +31,12 @@ public class ListComponent extends View {
         if(time == 0) {
             bitmap = Bitmap.createScaledBitmap(bitmap,w/10,w/10,true);
         }
+        canvas.save();
+        Path path = new Path();
+        path.addCircle(w/5,h/2,w/20, Path.Direction.CCW);
+        canvas.clipPath(path);
         canvas.drawBitmap(bitmap,w/5-w/20,h/2-w/20,paint);
+        canvas.restore();
         paint.setTextSize(h/5);
         canvas.drawText(getMeasuredText(w,title),w/8,h/4-paint.getTextSize()/2,paint);
         paint.setTextSize(h/8);

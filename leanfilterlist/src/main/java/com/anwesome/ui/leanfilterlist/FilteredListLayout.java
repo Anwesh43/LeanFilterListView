@@ -1,6 +1,8 @@
 package com.anwesome.ui.leanfilterlist;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.hardware.display.DisplayManager;
@@ -21,8 +23,7 @@ import java.util.List;
 public class FilteredListLayout extends ViewGroup{
     private HorizontalScrollView horizontalScrollView;
     private HorizontalButtonLayout filterButtonLayout;
-    private RelativeLayout listComponentLayout;
-    private float fbX = 0,lcY = 0;
+    private VerticalListView listComponentLayout;
     private List<String> categories = new ArrayList<>();
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private ScrollView scrollView;
@@ -48,7 +49,12 @@ public class FilteredListLayout extends ViewGroup{
         filterButtonLayout.addView(filterButton,new LayoutParams(viewW,h/20));
         filterButtonLayout.requestLayout();
         horizontalScrollView.requestLayout();
-        fbX+=(viewW*5)/4;
+    }
+    public void addListComponent(Bitmap bitmap,String title,String subtTitle) {
+        ListComponent listComponent = new ListComponent(getContext(),bitmap,title,subtTitle);
+        listComponentLayout.addView(listComponent,new LayoutParams(9*w/10,h/8));
+        listComponentLayout.requestLayout();
+        scrollView.requestLayout();
     }
     public void onLayout(boolean reloaded,int a,int b,int w,int h) {
 
@@ -72,8 +78,9 @@ public class FilteredListLayout extends ViewGroup{
         initViews();
     }
     public void initViews() {
+        setBackgroundColor(Color.parseColor("#ECEFF1"));
         filterButtonLayout = new HorizontalButtonLayout(getContext());
-        listComponentLayout = new RelativeLayout(getContext());
+        listComponentLayout = new VerticalListView(getContext());
 
         horizontalScrollView = new HorizontalScrollView(getContext());
         scrollView = new ScrollView(getContext());
@@ -89,7 +96,7 @@ public class FilteredListLayout extends ViewGroup{
         }
         paint.setTextSize(h/30);
         horizontalScrollView.addView(filterButtonLayout,new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
-        scrollView.addView(listComponentLayout,new LayoutParams(w,LayoutParams.WRAP_CONTENT));
+        scrollView.addView(listComponentLayout,new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
         requestLayout();
         horizontalScrollView.requestLayout();
         scrollView.requestLayout();
@@ -113,6 +120,30 @@ public class FilteredListLayout extends ViewGroup{
                 View child = getChildAt(i);
                 child.layout(x,0,x+child.getMeasuredWidth(),child.getMeasuredHeight());
                 x+=(child.getMeasuredWidth()*6)/5;
+            }
+        }
+    }
+    private class VerticalListView extends ViewGroup {
+        public VerticalListView(Context context) {
+            super(context);
+        }
+
+        public void onMeasure(int wspec, int hspec) {
+            int h = 0;
+            for (int i = 0; i < getChildCount(); i++) {
+                View child = getChildAt(i);
+                measureChild(child, wspec, hspec);
+                h += (child.getMeasuredHeight() * 6) / 5;
+            }
+            setMeasuredDimension(w, h);
+        }
+
+        public void onLayout(boolean reloaded, int a, int b, int w, int h) {
+            int y = 0;
+            for (int i = 0; i < getChildCount(); i++) {
+                View child = getChildAt(i);
+                child.layout(w/20, y, w/20+child.getMeasuredWidth(), y + child.getMeasuredHeight());
+                y += (child.getMeasuredHeight() * 6) / 5;
             }
         }
     }
