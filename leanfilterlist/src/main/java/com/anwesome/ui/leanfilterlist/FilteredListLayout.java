@@ -50,8 +50,9 @@ public class FilteredListLayout extends ViewGroup{
         filterButtonLayout.requestLayout();
         horizontalScrollView.requestLayout();
     }
-    public void addListComponent(Bitmap bitmap,String title,String subtTitle) {
+    public void addListComponent(Bitmap bitmap,String title,String subtTitle,List<String> categories) {
         ListComponent listComponent = new ListComponent(getContext(),bitmap,title,subtTitle);
+        listComponent.setCategories(categories);
         listComponentLayout.addView(listComponent,new LayoutParams(9*w/10,h/8));
         listComponentLayout.requestLayout();
         scrollView.requestLayout();
