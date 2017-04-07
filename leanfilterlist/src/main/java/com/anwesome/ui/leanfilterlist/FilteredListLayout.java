@@ -11,7 +11,6 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import java.util.ArrayList;
@@ -79,7 +78,7 @@ public class FilteredListLayout extends ViewGroup{
         initViews();
     }
     public void initViews() {
-        setBackgroundColor(Color.parseColor("#ECEFF1"));
+        setBackgroundColor(Color.parseColor("#E0E0E0"));
         filterButtonLayout = new HorizontalButtonLayout(getContext());
         listComponentLayout = new VerticalListView(getContext());
 
@@ -96,6 +95,8 @@ public class FilteredListLayout extends ViewGroup{
             h = size.y;
         }
         paint.setTextSize(h/30);
+        filterButtonLayout.setBackgroundColor(Color.WHITE);
+        listComponentLayout.setBackgroundColor(Color.parseColor("#E0E0E0"));
         horizontalScrollView.addView(filterButtonLayout,new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
         scrollView.addView(listComponentLayout,new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
         requestLayout();
@@ -113,13 +114,13 @@ public class FilteredListLayout extends ViewGroup{
                 measureChild(child,wspec,hspec);
                 w+=(child.getMeasuredWidth()*6)/5;
             }
-            setMeasuredDimension(w,h/20);
+            setMeasuredDimension(w,h/10);
         }
         public void onLayout(boolean reloaded,int a,int b,int w,int h) {
             int x = 0;
             for(int i=0;i<getChildCount();i++) {
                 View child = getChildAt(i);
-                child.layout(x,0,x+child.getMeasuredWidth(),child.getMeasuredHeight());
+                child.layout(x,h/25,x+child.getMeasuredWidth(),h/25+child.getMeasuredHeight());
                 x+=(child.getMeasuredWidth()*6)/5;
             }
         }
